@@ -1,0 +1,25 @@
+# Created by Metatosh team; see https://github.com/09pattt/metalias/docs/development.txt
+
+# Ignore all files
+
+*
+
+# Unignore for these following file/directory (Program files)
+
+!.gitignore
+
+!src
+!src/**
+!docs
+!docs/**
+
+!CHANGELOG.md
+!LICENSE
+!pyproject.toml
+!README.md
+!requirements.txt
+
+# Ignore for these following files/directory
+
+*__pycache__
+*.DS_Store
