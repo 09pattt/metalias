@@ -70,13 +70,21 @@ def install_package(package, version=None):
 
 
 def setup():
+    config["abspath"] = os.path.dirname(os.path.abspath(__file__))
+    config["requirement"] = os.path.join(config["abspath"], "..", "requirements.txt")
     missing = check_requirements(config["requirement"])
     if missing:
         for i in range(len(missing)):
             install_package(missing[i]["name"], missing[i]["version_req"])
-        print("\33[33m * RE-CHECK PACKAGES\33[0m]")
-        config["verbose"] = True
-        check_requirements(config["requirement"])
+        result = check_requirements(config["requirement"])
+        if result:
+            print(f"\33[41m\33[37m [ ! ] FAILED missing : {missing}\33[0m")
+            return False
+        else:
+            print(f"\33[42m\33[30m SUCCESSFULLY \33[0m")
+            return True
+    return True
+
 
 
 config = {
@@ -85,21 +93,24 @@ config = {
     "requirement": None
 }
 
-config["abspath"] = os.path.dirname(os.path.abspath(__file__))
-config["requirement"] = os.path.join(config["abspath"], "..", "requirements.txt")
+if __name__ == "__main__":
+    config["abspath"] = os.path.dirname(os.path.abspath(__file__))
+    config["requirement"] = os.path.join(config["abspath"], "..", "requirements.txt")
 
-if "verbose" in sys.argv or "-v" in sys.argv: # verbose the process
-    config["verbose"] = True
+    if "help" in sys.argv or "-h" in sys.argv: # install missing package or correct the version and fix .metalias directory
+        print("help, -h : open setup manual")
+        print("verbose, -v : print verbose of processing")
+        print("check, -c : check if existed packages match requirement without install")
+        sys.exit(0)
+
+    if "verbose" in sys.argv or "-v" in sys.argv: # verbose the process
+        config["verbose"] = True
+
+    if "check" in sys.argv or "-c" in sys.argv: # check package but will not install
+        config["verbose"] = True
+        if check_requirements(config["requirement"]):
+            sys.exit(1)
+        else:
+            sys.exit(0)
+
     setup()
-
-elif "help" in sys.argv or "-h" in sys.argv: # install missing package or correct the version and fix .metalias directory
-    pass
-
-elif "reset" in sys.argv or "-r" in sys.argv: # reinstall all package and recreate .metalias
-    pass
-
-elif len(sys.argv) == 1:
-    config["verbose"] = False
-    setup()
-else:
-    print(f"UNKNOWN ARGUMENT: {sys.argv}")
