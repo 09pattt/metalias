@@ -12,6 +12,10 @@
 !src/**
 !docs
 !docs/**
+!scripts
+!scripts/**
+!tests
+!tests/**
 
 !CHANGELOG.md
 !LICENSE

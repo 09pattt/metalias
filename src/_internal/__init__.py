@@ -1,2 +1,2 @@
 from . import utils
-from . import command
+from . import commands
