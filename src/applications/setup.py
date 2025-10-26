@@ -29,7 +29,7 @@ def line_split(line: str):
     
     return line, None # if line has no specified version
 
-def check_requirements(template = "./../requirements.txt"):
+def check_requirements(template = "./../../requirements.txt"):
     missing=[]
     passed = 0
     interval = 0
@@ -71,7 +71,7 @@ def install_package(package, version=None):
 
 def setup():
     config["abspath"] = os.path.dirname(os.path.abspath(__file__))
-    config["requirement"] = os.path.join(config["abspath"], "..", "requirements.txt")
+    config["requirement"] = os.path.join(config["abspath"], "..", "..", "requirements.txt")
     missing = check_requirements(config["requirement"])
     if missing:
         for i in range(len(missing)):
@@ -95,7 +95,7 @@ config = {
 
 if __name__ == "__main__":
     config["abspath"] = os.path.dirname(os.path.abspath(__file__))
-    config["requirement"] = os.path.join(config["abspath"], "..", "requirements.txt")
+    config["requirement"] = os.path.join(config["abspath"], "..", "..", "requirements.txt")
 
     if "help" in sys.argv or "-h" in sys.argv: # install missing package or correct the version and fix .metalias directory
         print("help, -h : open setup manual")
