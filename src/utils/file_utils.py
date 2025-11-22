@@ -1,12 +1,10 @@
-import pathlib
-import os
 import shutil
 from pathlib import Path
 
 def appdir():
     return Path(__file__).resolve().parent.parent.parent
 
-def join(*args, resolve: bool = True):
+def join(*args: str, resolve: bool = True):
     path = Path("")
     for i in range(len(args)):
         tail = Path(args[i])
@@ -25,7 +23,10 @@ def rmfile(path: str):
 
 def mkdir(path: str, exist_ok: bool = False, parents: bool = True):
     file = Path(path).resolve()
-    file.mkdir(exist_ok=exist_ok, parents=parents)
+    try:
+        file.mkdir(exist_ok=exist_ok, parents=parents)
+    except FileExistsError:
+        print(f"\33[37m\33[41m * FileExistError * \33[0m \33[33m : Directory at path \33[35m>>>{file}<<<\33[33m already existed.\33[0m")
 
 def rmdir(path: str):
     d = Path(path)
@@ -43,38 +44,3 @@ def scan(path: str, filter: str = "*"):
     if d.exists():
         for item in d.rglob(filter):
             print(item)
-
-if __name__ == "__main__":
-    metadata = {
-        "destination": "data/development/"
-    }
-    while True: # Test command line
-        cmd = input(" >>> ").replace(" ", "").lower()
-        if cmd == "":
-            pass
-        elif cmd == "exit":
-            break
-        elif cmd == "clear":
-            os.system("clear")
-        elif cmd == "mkfile":
-            file = input(" File : ")
-            mkfile(join(appdir(), metadata["destination"], file))
-        elif cmd == "rmfile":
-            file = input(" File : ")
-            rmfile(join(appdir(), metadata["destination"], file))
-        elif cmd == "mkdir":
-            dirname = input(" Directory : ")
-            mkdir(join(appdir(), metadata["destination"], dirname))
-        elif cmd == "rmdir":
-            dirname = input(" Directory : ")
-            rmdir(join(appdir(), metadata["destination"], dirname))
-        elif cmd == "lsdir":
-            dirname = input(" Directory : ")
-            lsdir(join(appdir(), metadata["destination"], dirname))
-        elif cmd == "scan":
-            dirname = input(" Directory : ")
-            scan(join(appdir(), metadata["destination"], dirname))
-        elif cmd == "test":
-            pass
-        else:
-            print("Unknown : " + cmd)
