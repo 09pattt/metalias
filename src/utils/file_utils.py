@@ -11,6 +11,27 @@ def join(*args: str, resolve: bool = True):
         path = path / tail
     if resolve: path = path.resolve()
     return path
+    
+class file_metadata:
+    def __init__(self, path: str):
+        self.path = path
+        self.exists = None
+        self.type = None
+        self.is_file = None
+        self.is_dir = None
+        f = Path(path)
+        if f.exists():
+            self.exists = True
+            if f.is_file():
+                self.type = "file"
+                self.is_file = True
+            elif f.is_dir():
+                self.type = "dir"
+                self.is_dir = True
+            else:
+                pass
+        else:
+            self.exists = False
 
 def mkfile(path: str, exist_ok: bool = False):
     file = Path(path).resolve()

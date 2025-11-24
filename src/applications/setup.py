@@ -1,22 +1,58 @@
 import os
 import sys
+import json
 import importlib.metadata
 import subprocess
 from src.utils import file_utils
 
-def setup(verbose: bool = False, requirement: str = None):
+def setup(verbose: bool = False, requirement: str = None, json_path: str = None):
 
     """
     Assign config properties, handling class import/return data.
     """
 
+    if json_path == None:
+        json_path = file_utils.join(file_utils.appdir(), "index.json")
+
     if requirement == None:
         requirement = file_utils.join(file_utils.appdir(), "requirements.txt")
 
     config = {
+        "json": json_path,
         "verbose": verbose,
         "requirement": requirement
     }
+
+    with open(json_path, "r", encoding="utf-8") as f:
+        template = json.load(f)
+        env_files = template["env_files"]
+        for i in range(len(env_files)):
+            data = file_utils.file_metadata(file_utils.join(file_utils.appdir(), env_files[i]["path"]))
+            
+            if verbose:
+                print(f"\33[30m\33[42m CHECKED FOR \"{data.path}\" \33[0m")
+                print(f"exists: {data.exists}")
+                print(f"type: {data.type}")
+                print(f"is_file: {data.is_file}")
+                print(f"is_dir: {data.is_dir}")
+
+            if data.exists:
+                if verbose: print(f"\33[32mfile at {data.path} exists \33[0m")
+                if data.type == env_files[i]["type"]:
+                    if verbose: print(f"\33[32mfile exists with correct type: PASSED\33[0m")
+                else:
+                    raise RuntimeError(f"{data.path} already exists with incorrect type")
+            elif not data.exists:
+                if verbose: print(f"\33[31mfile at {data.path} not found \33[0m")
+                if env_files[i]["type"] == "file":
+                    if verbose: print(f"RUNNING CREATE FILE AT {data.path}")
+                    file_utils.mkfile(path=env_files[i]["path"])
+                if env_files[i]["type"] == "dir":
+                    if verbose: print(f"RUNNING CREATE DIRECTORY AT {data.path}")
+                    file_utils.mkdir(path=env_files[i]["path"])
+            else:
+                raise RuntimeError("Unexpected value from data.exists")
+            
 
     missing = check_requirements(verbose=config["verbose"], template=config["requirement"])
     
@@ -51,9 +87,9 @@ def check_requirements(verbose: bool, template: str):
             print("\33[33mPackage incompatible, to corrective action:\33[0m")
             for i in range(0, len(missing)):
                 if missing[i]["cur_version"]:
-                    print(f'\33[33m - INCOMPATIBLE PACKAGE: \33[35m{missing[i]["name"]} \33[33mVERSION: \33[31m{missing[i]["version_now"]} \33[0m>>> \33[32m{missing[i]["version_req"]}\33[0m')
+                    print(f'\33[33m - INCOMPATIBLE PACKAGE: \33[35m{missing[i]["package_name"]} \33[33mVERSION: \33[31m{missing[i]["cur_version"]} \33[0m>>> \33[32m{missing[i]["req_version"]}\33[0m')
                 else:
-                    print(f'\33[33m - MISSING PACKAGE: \33[35m{missing[i]["name"]} \33[33mVERSION: \33[35m{missing[i]["version_req"]}\33[0m')
+                    print(f'\33[33m - MISSING PACKAGE: \33[35m{missing[i]["package_name"]} \33[33mVERSION: \33[35m{missing[i]["req_version"]}\33[0m')
     return missing
 
 def line_split(line: str):
