@@ -1,4 +1,4 @@
-from src.applications import setup
+from scripts import setup
 from src.utils import file_utils
 
 if __name__ == "__main__":

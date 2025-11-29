@@ -4,6 +4,9 @@ from pathlib import Path
 def appdir():
     return Path(__file__).resolve().parent.parent.parent
 
+def datadir():
+    return join(appdir(), ".metalias")
+
 def join(*args: str, resolve: bool = True):
     path = Path("")
     for i in range(len(args)):

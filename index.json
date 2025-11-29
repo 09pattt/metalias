@@ -1,0 +1,10 @@
+{
+    "env_files": [
+        {"path": ".metalias", "type": "dir"},
+        {"path": ".metalias/data", "type": "dir"},
+        {"path": ".metalias/data/metadata.json", "type": "file"},
+        {"path": ".metalias/internal", "type": "dir"},
+        {"path": ".metalias/internal/setting.json", "type": "file"},
+        {"path": ".metalias/internal/metadata.json", "type": "file"}
+    ]
+}
