@@ -1,4 +1,3 @@
-import os
 import sys
 import json
 import importlib.metadata
@@ -12,10 +11,12 @@ def setup(verbose: bool = False, requirement: str = None, json_path: str = None)
     """
 
     if json_path == None:
-        json_path = file_utils.join(file_utils.appdir(), "index.json")
+        json_path = file_utils.join(file_utils.appdir(), "template.json")
+        if verbose: print(json_path)
 
     if requirement == None:
         requirement = file_utils.join(file_utils.appdir(), "requirements.txt")
+        if verbose: print(requirement)
 
     config = {
         "json": json_path,
@@ -43,13 +44,21 @@ def setup(verbose: bool = False, requirement: str = None, json_path: str = None)
                 else:
                     raise RuntimeError(f"{data.path} already exists with incorrect type")
             elif not data.exists:
-                if verbose: print(f"\33[31mfile at {data.path} not found \33[0m")
+                if verbose : print(f"\33[31mfile at {data.path} not found \33[0m")
+
                 if env_files[i]["type"] == "file":
                     if verbose: print(f"RUNNING CREATE FILE AT {data.path}")
                     file_utils.mkfile(path=env_files[i]["path"])
+                    res = file_utils.file_metadata(file_utils.join(file_utils.appdir(), env_files[i]["path"]))
+                    if res.exists and res.is_file and verbose:
+                        print(f"\33[32mCreated file : {env_files[i]["path"]}\33[0m")
+
                 if env_files[i]["type"] == "dir":
                     if verbose: print(f"RUNNING CREATE DIRECTORY AT {data.path}")
                     file_utils.mkdir(path=env_files[i]["path"])
+                    res = file_utils.file_metadata(file_utils.join(file_utils.appdir(), env_files[i]["path"]))
+                    if res.exists and res.is_dir and verbose:
+                        print(f"\33[32mCreated directory : {env_files[i]["path"]}\33[0m")
             else:
                 raise RuntimeError("Unexpected value from data.exists")
             
@@ -125,3 +134,23 @@ def install_package(package, version=None):
     if result.returncode != 0:
         print(f"\33[31m - FAILED TO INSTALL {package}\33[0m")
         print(f"ERROR : {result.stderr}")
+
+if __name__ == "__main__":
+    if "dev" in sys.argv:
+        verbose = bool(input("VERBOSE (False) : "))
+        requirement = input("REQUIREMENTS_PATH (requirements.txt) : ")
+        if requirement == "":
+            requirement = None
+        json_path = input("JSON_PATH (template.json) : ")
+        if json_path == "":
+            json_path = None
+        print(f"verbose = {verbose}")
+        print(f"requirement = {requirement}")
+        print(f"json_path = {json_path}")
+        print(f"setup(verbose={verbose}, requirement={requirement}, json_path={json_path})")
+        input("Is it ok to run setup with these arguments. (Ctrl+C to abort)")
+        setup(verbose=verbose, requirement=requirement, json_path=json_path)
+    elif len(sys.argv) > 1:
+        print("UNKNOWN ARGUMENTS >>>{sys.argv}<<<")
+    elif len(sys.argv) == 1:
+        setup()

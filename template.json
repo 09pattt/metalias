@@ -1,0 +1,34 @@
+{
+    "env_files": [
+        {"path": ".metalias", "type": "dir"},
+        {"path": ".metalias/data", "type": "dir"},
+        {"path": ".metalias/data/metadata.json", "type": "file"},
+        {"path": ".metalias/internal", "type": "dir"},
+        {"path": ".metalias/internal/setting.json", "type": "file"},
+        {"path": ".metalias/internal/metadata.json", "type": "file"}
+    ],
+    "internal": {
+        "metadata": {
+            "user": {
+            	"logged_in": false,
+            	"avoid_update_log": false
+            },
+            "system": {
+            	"first_setup": false,
+            	"update": false
+            },
+            "data": {
+            	"encryption": true
+            }
+        },
+        "setting": {
+            "general": {
+                "header_on_start": false
+            },
+            "interface": {
+                "emoji": true,
+                "selection_format": 0
+            }
+        }
+    }
+}
