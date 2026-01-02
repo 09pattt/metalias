@@ -1,0 +1,6 @@
+[project]
+name = "metalias"
+version = "0.1.0"
+
+[project.scripts]
+metalias = "applications.cli:index"

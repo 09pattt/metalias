@@ -1,3 +1,4 @@
+import os
 import shutil
 from pathlib import Path
 
@@ -15,13 +16,14 @@ def join(*args: str, resolve: bool = True):
     if resolve: path = path.resolve()
     return path
     
-class file_metadata:
+class PathData:
     def __init__(self, path: str):
         self.path = path
         self.exists = None
         self.type = None
         self.is_file = None
         self.is_dir = None
+        self.size = self.get_size()
         f = Path(path)
         if f.exists():
             self.exists = True
@@ -35,6 +37,18 @@ class file_metadata:
                 pass
         else:
             self.exists = False
+    
+    def get_size(self):
+        size = 0
+        for root, dirs, files in os.walk(self.path):
+            for file in files:
+                try:
+                    file_path = os.path.join(root, file)
+                    size += os.path.getsize(file_path)
+                except FileNotFoundError:
+                    pass
+        self.size = size
+        return size
 
 def mkfile(path: str, exist_ok: bool = False):
     file = Path(path).resolve()

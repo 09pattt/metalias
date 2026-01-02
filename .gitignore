@@ -24,6 +24,11 @@
 !requirements.txt
 !template.json
 
+# Except for these following files
+
+metalias.egg-info
+.pytest_cache
+
 # Ignore for these following files/directory
 
 *__pycache__

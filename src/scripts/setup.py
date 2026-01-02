@@ -2,7 +2,7 @@ import sys
 import json
 import importlib.metadata
 import subprocess
-from src.utils import file_utils
+from src.utils import file as futils
 
 def setup(verbose: bool = False, requirement: str = None, json_path: str = None):
 
@@ -11,11 +11,11 @@ def setup(verbose: bool = False, requirement: str = None, json_path: str = None)
     """
 
     if json_path == None:
-        json_path = file_utils.join(file_utils.appdir(), "template.json")
+        json_path = futils.join(futils.appdir(), "template.json")
         if verbose: print(json_path)
 
     if requirement == None:
-        requirement = file_utils.join(file_utils.appdir(), "requirements.txt")
+        requirement = futils.join(futils.appdir(), "requirements.txt")
         if verbose: print(requirement)
 
     config = {
@@ -28,7 +28,7 @@ def setup(verbose: bool = False, requirement: str = None, json_path: str = None)
         template = json.load(f)
         env_files = template["env_files"]
         for i in range(len(env_files)):
-            data = file_utils.file_metadata(file_utils.join(file_utils.appdir(), env_files[i]["path"]))
+            data = futils.PathData(futils.join(futils.appdir(), env_files[i]["path"]))
             
             if verbose:
                 print(f"\33[30m\33[42m CHECKED FOR \"{data.path}\" \33[0m")
@@ -48,15 +48,15 @@ def setup(verbose: bool = False, requirement: str = None, json_path: str = None)
 
                 if env_files[i]["type"] == "file":
                     if verbose: print(f"RUNNING CREATE FILE AT {data.path}")
-                    file_utils.mkfile(path=env_files[i]["path"])
-                    res = file_utils.file_metadata(file_utils.join(file_utils.appdir(), env_files[i]["path"]))
+                    futils.mkfile(path=env_files[i]["path"])
+                    res = futils.PathData(futils.join(futils.appdir(), env_files[i]["path"]))
                     if res.exists and res.is_file and verbose:
                         print(f"\33[32mCreated file : {env_files[i]["path"]}\33[0m")
 
                 if env_files[i]["type"] == "dir":
                     if verbose: print(f"RUNNING CREATE DIRECTORY AT {data.path}")
-                    file_utils.mkdir(path=env_files[i]["path"])
-                    res = file_utils.file_metadata(file_utils.join(file_utils.appdir(), env_files[i]["path"]))
+                    futils.mkdir(path=env_files[i]["path"])
+                    res = futils.PathData(futils.join(futils.appdir(), env_files[i]["path"]))
                     if res.exists and res.is_dir and verbose:
                         print(f"\33[32mCreated directory : {env_files[i]["path"]}\33[0m")
             else:
