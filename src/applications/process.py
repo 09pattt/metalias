@@ -5,25 +5,32 @@ Docstring for src.applications.command
 -แปลงค่าจาก CLI ให้นำไปใช้ต่อในส่วนต่างๆได้
 """
 
-from applications.page import Prompter
-from applications.metadata import ImportData
+from applications.view import Prompter
+from applications.appdata import Metadata
 from utils.file import *
 
 def version():
     page = Prompter()
-    page.add_message(f"{ImportData()['program']} {ImportData()['version']}").generate()
+    metadata = Metadata()
+    page.add_message(f"{metadata.data['program']} {metadata.data['version']}").generate()
 
 def menu():
-    print(" - MENU - ")
-
+    page = Prompter()
+    page.add_table(metalias=[
+        f"metalias -h     open program manual page",
+        f"metalias -v     show installed program version",
+        f"metalias -a     activate primary preset",
+        f"metalias -d     deactivate preset"
+    ]).generate()
 
 def info(option: str = "index"):
     if option == "index":
         page = Prompter()
+        metadata = Metadata()
         page.add_table(IndexPage=[
-                f"Program : {ImportData()['program']}",
-                f"Version : {ImportData()['version']}",
-                f"Version number : {ImportData()['version_number']}",
+                f"Program : {metadata.data['program']}",
+                f"Version : {metadata.data['version']}",
+                f"Version number : {metadata.data['version_number']}",
                 f"Path : {str(appdir())}"
             ]).generate()
 
