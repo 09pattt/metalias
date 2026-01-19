@@ -6,7 +6,7 @@ Docstring for src.applications.cli
 
 import argparse
 import sys
-from applications import log
+from features import log
 from applications import process
 
 def index():

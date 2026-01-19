@@ -5,8 +5,8 @@ Docstring for src.applications.command
 -แปลงค่าจาก CLI ให้นำไปใช้ต่อในส่วนต่างๆได้
 """
 
-from applications.view import Prompter
-from applications.appdata import Metadata
+from features.page import Prompter
+from features.appdata import Metadata
 from utils.file import *
 
 def version():

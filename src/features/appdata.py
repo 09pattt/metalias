@@ -5,6 +5,7 @@ Docstring for applications.appdata
 """
 
 import json
+import shutil
 from utils.file import *
 
 class Metadata:
@@ -16,9 +17,13 @@ class Metadata:
         with open(str(join(appdir(), self.path)), "r", encoding="utf-8") as f:
             return json.load(f)
         
-class Data:
+class AppData:
     def __init__(self, appdata_path: str = join(appdir(), ".metalias")):
         self.path = appdir()
         self.app_pathdata = PathData(self.path)
         self.appdata_path = appdata_path
         self.appdata_pathdata = PathData(self.appdata_path)
+
+class RuntimeData:
+    def __init__(self):
+        self.terminal_width = shutil.get_terminal_size().columns
