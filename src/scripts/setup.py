@@ -1,3 +1,10 @@
+"""
+
+REFACTOR REQUIRED:
+เปลี่ยนไปใช้ค่าจาก Constants และ States ให้หมดทำให้ทุกอย่างเสถียรและจัดการได้ดีที่สุด
+
+"""
+
 import sys
 import json
 import importlib.metadata

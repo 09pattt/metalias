@@ -19,7 +19,7 @@ class Metadata:
         
 class AppData:
     def __init__(self, appdata_path: str = join(appdir(), ".metalias")):
-        self.path = appdir()
+        self.path = appdir() # Change name to app_path
         self.app_pathdata = PathData(self.path)
         self.appdata_path = appdata_path
         self.appdata_pathdata = PathData(self.appdata_path)

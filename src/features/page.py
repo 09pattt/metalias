@@ -8,20 +8,19 @@ from features.appdata import RuntimeData
 
 class Prompter:
     def __init__(self):
-        self.lines = [] # Contain all content with metadata
-        self.width = self.get_width() # Terminal width update by execute self.get_width()
-        self.table = [] # List of columns
-        self.columns = [] # List of data with metadata like Header, Style
+        self.set()
 
-    def clear(self):
-        self.lines = []
-        return self
-
-    def reset(self):
+    def set(self):
         self.lines = []
         self.width = self.get_width()
         self.table = []
         self.columns = []
+        return self
+    
+    # Text box
+    
+    def clear(self):
+        self.lines = []
         return self
     
     def add_text(self, *texts):
@@ -39,6 +38,8 @@ class Prompter:
     def add_separator(self, text:str = "", fill:str = "-"):
         self.lines.append({"type":"separator", "content":text, "fill":fill})
         return self
+    
+    # Table
 
     def close_table(self):
         if self.table:
@@ -49,12 +50,13 @@ class Prompter:
     def clear_table(self):
         self.table = []
     
-    def add_column(self, list:list, header:str = "Column"):
-        width = 0
-        for item in list:
-            string_length = len(str(item))
-            if string_length > width:
-                width = string_length
+    def add_column(self, list:list, width:int = 0, header:str = ""):
+        if not width:
+            width = 0
+            for item in list:
+                string_length = len(str(item))
+                if string_length > width:
+                    width = string_length
         length = len(list)
         self.table.append({"header":header, "list":list, "width":width, "length":length})
         return self 
@@ -88,24 +90,24 @@ class Prompter:
                 self.get_width()
                 rows = []
                 total_width = 0
-                for column in line["content"]: # Column dictionary
+                for column in line["content"]:
                     total_width += column["width"] + 1
                     if total_width < self.width:
                         rows.append(column)
-                    else: # If rows is full -> Print out
-                        for column2 in rows: # Loop for all columns for header printing
+                    else:
+                        for column2 in rows:
                             print(f"{column2["header"]:<{column2["width"]}}", end=" ")
-                        print() # Start new line
+                        print()
                         
-                        for column2 in rows: # Separator printing
+                        for column2 in rows:
                             print("-" * column2["width"], end=" ")
                         print("")
                         
                         columns_length = []
                         for column2 in rows:
                             columns_length.append(column2["length"])
-                        for index in range(0, max(columns_length)): # Content printing
-                            for column2 in rows: # Row of column content at specific index
+                        for index in range(0, max(columns_length)):
+                            for column2 in rows:
                                 if index < column2["length"]:
                                     print(f"{column2["list"][index]:<{column2["width"]}}", end=" ")
                                 else:
@@ -113,23 +115,23 @@ class Prompter:
                             print("")
                         print("")
 
-                        rows = [] # Reset rows for another rows
+                        rows = []
                         rows.append(column)
                         total_width = column["width"] + 1
 
-                for column2 in rows: # Loop for all columns for header printing
+                for column2 in rows:
                     print(f"{column2["header"]:<{column2["width"]}}", end=" ")
-                print() # Start new line
+                print()
                 
-                for column2 in rows: # Separator printing
+                for column2 in rows:
                     print("-" * column2["width"], end=" ")
                 print("")
                 
                 columns_length = []
                 for column2 in rows:
                     columns_length.append(column2["length"])
-                for index in range(0, max(columns_length)): # Content printing
-                    for column2 in rows: # Row of column content at specific index
+                for index in range(0, max(columns_length)):
+                    for column2 in rows:
                         if index < column2["length"]:
                             print(f"{column2["list"][index]:<{column2["width"]}}", end=" ")
                         else:

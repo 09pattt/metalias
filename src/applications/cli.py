@@ -7,7 +7,7 @@ Docstring for src.applications.cli
 import argparse
 import sys
 from features import log
-from applications import process
+from applications.router import process
 
 def index():
     parser = argparse.ArgumentParser(
@@ -78,37 +78,6 @@ def index():
 
     parser.set_defaults(command="menu")
 
-
-    # Execution
+    # Attach to router
 
     args = parser.parse_args()
-
-    if args.version:
-        process.version()
-        sys.exit(0)
-
-    if args.yes:
-        pass
-
-    if args.log:
-        print("\33[43m\33[30m * PROCESS DATA * \33[0m")
-        log.VarPair("args.command", args.command)
-        log.VarPair("args.info_option", args.info_option)
-
-    if args.command == "menu":
-        process.menu()
-
-    elif args.command == "info":
-        if args.info_option == "index":
-            process.info()
-        else:
-            log.Log("Have no any condition support for this parser").error()
-
-    elif args.command == "setting":
-        if args.setting_option == "index":
-            process.setting()
-        else:
-            log.Log("Have no any condition support for this parser").error()
-    
-    else:
-        log.Log("Have no any condition support for this parser").error()
