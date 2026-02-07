@@ -5,8 +5,6 @@ Docstring for src.applications.cli
 """
 
 import argparse
-import sys
-from features import log
 from applications.router import process
 
 def index():

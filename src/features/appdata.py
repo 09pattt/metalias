@@ -5,7 +5,7 @@ Docstring for applications.appdata
 """
 
 import json
-import shutil
+from constants import *
 from utils.file import *
 
 class Metadata:
@@ -19,10 +19,8 @@ class Metadata:
         
 class AppData:
     def __init__(self, appdata_path: str = join(appdir(), ".metalias")):
-        self.path = appdir() # Change name to app_path
-        self.app_pathdata = PathData(self.path)
-        self.appdata_path = appdata_path
-        self.appdata_pathdata = PathData(self.appdata_path)
+        self.app_pathdata = PathData(constants.Path.APP_PATH)
+        self.appdata_pathdata = PathData(constants.Path.APPDATA_PATH)
 
 class RuntimeData:
     def __init__(self):

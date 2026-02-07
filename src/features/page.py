@@ -8,11 +8,12 @@ from features.appdata import RuntimeData
 
 class Prompter:
     def __init__(self):
-        self.set()
-
-    def set(self):
         self.lines = []
-        self.width = self.get_width()
+        self.table = []
+        self.columns = []
+
+    def reset(self):
+        self.lines = []
         self.table = []
         self.columns = []
         return self
@@ -59,12 +60,9 @@ class Prompter:
                     width = string_length
         length = len(list)
         self.table.append({"header":header, "list":list, "width":width, "length":length})
-        return self 
-    
-    def get_width(self):
-        self.width = RuntimeData().terminal_width
+        return self
 
-    def generate(self):
+    def generate(self, reset: bool = True):
         for line in self.lines:
             if line["type"] == "message":
                 print(line["content"])
@@ -73,26 +71,18 @@ class Prompter:
                 print("")
 
             elif line["type"] == "separator":
-                self.get_width()
                 if line["content"]:
-                    print(str(line["content"]).center(self.width, line["fill"]))
+                    print(str(line["content"]).center(RuntimeData().terminal_width, line["fill"]))
                 else:
-                    print(line["fill"] * self.width)
-
-            elif line["type"] == "table2":
-                for table in line["content"]:
-                    print(table["header"])
-                    print("----------------")
-                    for item in table["items"]:
-                        print(item)
+                    print(line["fill"] * RuntimeData().terminal_width)
 
             elif line["type"] == "table":
-                self.get_width()
+                width = RuntimeData().terminal_width
                 rows = []
                 total_width = 0
                 for column in line["content"]:
                     total_width += column["width"] + 1
-                    if total_width < self.width:
+                    if total_width < width:
                         rows.append(column)
                     else:
                         for column2 in rows:
@@ -115,8 +105,7 @@ class Prompter:
                             print("")
                         print("")
 
-                        rows = []
-                        rows.append(column)
+                        rows = [column]
                         total_width = column["width"] + 1
 
                 for column2 in rows:
@@ -137,6 +126,8 @@ class Prompter:
                         else:
                             print(f"{"":<{column2["width"]}}", end=" ")
                     print("")
+        if reset:
+            self.reset()
         return self
 
 logging.basicConfig(
@@ -156,16 +147,3 @@ class Log:
 
     def error(self):
         logging.error(self.message)
-
-def VarPair(variable: str, value: any, saparator: str = "=="):
-    if value == True:
-        expression = f"\33[32m{value}\33[0m"
-    elif value == False:
-        expression = f"\33[31m{value}\33[0m"
-    elif value == None:
-        expression = f"\33[31m{value}\33[0m"
-    elif type(value) == str:
-        expression = f'\33[32m"{value}"\33[0m'
-    else:
-        expression = f"\33[32m{value}\33[0m"
-    print(f"\33[33m{variable} \33[35m: {type(value)} \33[0m {saparator} {expression}\33[0m")

@@ -1,38 +1,22 @@
+"""
+
+REFACTOR REQUIRED:
+เปลี่ยนไปใช้ค่าจาก Constants และ States ให้หมดทำให้ทุกอย่างเสถียรและจัดการได้ดีที่สุด
+
+"""
+
 import sys
 import json
 import importlib.metadata
 import subprocess
-import constants
 from src.utils import file as futils
 
-REQUIREMENTS: str = None
-TEMPLATE: str = None
-VERBOSE: bool = None
+def setup(verbose: bool = False, requirement: str = None, json_path: str = None):
 
-DEFAULT_SETUP_REQUIREMENTS = 'requirements.txt'
-DEFAULT_SETUP_TEMPLATE = 'setup_template.json'
+    """
+    Assign config properties, handling class import/return data.
+    """
 
-def weld_path(path):
-    futils.join(constants.Path.APP_PATH, path)
-
-def set(requirements: str = None, template: str = None, verbose: bool = None):
-    if not REQUIREMENTS:
-        if not requirements:
-            REQUIREMENTS = weld_path(DEFAULT_SETUP_REQUIREMENTS)
-        else:
-            REQUIREMENTS = weld_path(requirements)
-    if not TEMPLATE:
-        if not template:
-            TEMPLATE = weld_path(DEFAULT_SETUP_TEMPLATE)
-        else:
-            TEMPLATE = weld_path(template)
-    if VERBOSE == None:
-        if not verbose:
-            VERBOSE = False
-        else:
-            VERBOSE = verbose
-
-def setup():
     if json_path == None:
         json_path = futils.join(futils.appdir(), "template.json")
         if verbose: print(json_path)

@@ -1,21 +1,23 @@
 import os
 import shutil
+from functools import lru_cache
 from pathlib import Path
 
-def appdir():
+@lru_cache()
+def appdir() -> Path:
     return Path(__file__).resolve().parent.parent.parent
 
-def datadir():
-    return join(appdir(), ".metalias")
-
-def join(*args: str, resolve: bool = True):
+def join(*args: str, resolve: bool = True) -> Path:
     path = Path("")
     for i in range(len(args)):
         tail = Path(args[i])
         path = path / tail
     if resolve: path = path.resolve()
     return path
-    
+
+def join_app_path(path: str) -> Path:
+    return appdir() / Path(path)
+
 class PathData:
     def __init__(self, path: str):
         self.path = path
@@ -24,6 +26,7 @@ class PathData:
         self.is_file = None
         self.is_dir = None
         self.size = self.get_size()
+
         f = Path(path)
         if f.exists():
             self.exists = True
@@ -77,8 +80,8 @@ def lsdir(path: str):
         for item in d.iterdir():
             print(item)
 
-def scan(path: str, filter: str = "*"):
+def scan(path: str, search_filter: str = "*"):
     d = Path(path)
     if d.exists():
-        for item in d.rglob(filter):
+        for item in d.rglob(search_filter):
             print(item)

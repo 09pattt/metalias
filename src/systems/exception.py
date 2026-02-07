@@ -1,5 +1,11 @@
+"""
+Docstring for systems.exception
+"""
+
+from constants.system import ExitCode
+
 class AppError(Exception):
-    code = 'ERR101'
+    code = ExitCode.APP_SESSION + ExitCode.SESSION_ERROR
     template = 'Encounted to unspecified error'
 
     def __init__(self, *args):

@@ -1,4 +1,3 @@
 from .app import *
-from .metadata import *
-from .path import *
-from .message import *
+from .text import *
+from .system import *
